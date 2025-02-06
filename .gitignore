@@ -6,3 +6,4 @@ target/
 out/
 bin/
 .DS_Store
+test/
