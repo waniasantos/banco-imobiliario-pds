@@ -1,14 +1,23 @@
 package com.bancoimobiliario.models;
 
+import com.bancoimobiliario.strategy.CalculoTaxaStrategy;
+import com.bancoimobiliario.strategy.TaxaFixaStrategy;
+
 public class Empresa extends Adquirivel {
     private double taxaUsoFixa; 
+    private CalculoTaxaStrategy estrategiaCalculo;
 
     public Empresa(String nome, int posicao, double valorCompra, double taxaUsoFixa) {
         super(nome, posicao, valorCompra);
         this.taxaUsoFixa = taxaUsoFixa;
+        this.estrategiaCalculo = new TaxaFixaStrategy();
     }
 
     public double getTaxaUsoFixa() { return taxaUsoFixa; }
+
+    public void setEstrategiaCalculo(CalculoTaxaStrategy estrategia) {
+        this.estrategiaCalculo = estrategia;
+    }
 
     @Override
     public void acaoAoParar(Jogador jogador, int valorDado) {
@@ -24,7 +33,7 @@ public class Empresa extends Adquirivel {
 
     @Override
     public void cobrarTaxa(Jogador visitante, int valorDado) {
-        double taxa = this.taxaUsoFixa;
+        double taxa = estrategiaCalculo.calcularTaxa(this, visitante, valorDado);
         if (visitante.getSaldo() >= taxa) {
             visitante.atualizarSaldo(-taxa);
             dono.atualizarSaldo(taxa);
@@ -32,6 +41,7 @@ public class Empresa extends Adquirivel {
         } else {
             System.out.println(visitante.getNome() + " não possui saldo suficiente para pagar a taxa de uso.");
             // eliminação -> controlador
+            visitante.eliminar();
         }
     }
     
