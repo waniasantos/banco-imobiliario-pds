@@ -10,6 +10,8 @@ public class LugarEspecial extends Logradouro {
         this.valorSaldo = valorSaldo;
     }
 
+    public int getMovimento() { return movimento; }
+
     @Override
     public void acaoAoParar(Jogador jogador, int valorDado) {
         if (movimento != 0) {
