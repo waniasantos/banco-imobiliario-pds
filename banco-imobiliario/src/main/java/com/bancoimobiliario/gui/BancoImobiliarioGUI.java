@@ -18,7 +18,7 @@ public class BancoImobiliarioGUI extends JFrame {
     private JPanel painelJogo;
     private JTextArea logJogo;
     private List<JPanel> painelJogadores;
-    private JButton botaoRolarDados;
+    private JButton botaoValoresDados;
     private JButton botaoComprar;
     private JButton botaoPassarVez;
     
@@ -60,11 +60,11 @@ public class BancoImobiliarioGUI extends JFrame {
         
         // Configuração do painel de controles
         painelControles.setLayout(new GridLayout(3, 1));
-        botaoRolarDados = new JButton("Rolar Dados");
+        botaoValoresDados = new JButton("Valor dos Dados");
         botaoComprar = new JButton("Comprar Propriedade");
         botaoPassarVez = new JButton("Passar Vez");
         
-        painelControles.add(botaoRolarDados);
+        painelControles.add(botaoValoresDados);
         painelControles.add(botaoComprar);
         painelControles.add(botaoPassarVez);
         
@@ -108,14 +108,35 @@ public class BancoImobiliarioGUI extends JFrame {
     }
     
     private void configurarListeners() {
-        botaoRolarDados.addActionListener(new ActionListener() {
+        botaoValoresDados.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int[] dados = controller.rolarDados();
-                logJogo.append(controller.getJogadorAtual().getNome() + " rolou os dados: " + 
-                              dados[0] + " e " + dados[1] + "\n");
-                controller.realizarJogada();
-                atualizarEstadoJogo();
+                // Pedir os valores dos dados ao usuário
+                String valorDado1Str = JOptionPane.showInputDialog(BancoImobiliarioGUI.this, 
+                                       "Informe o valor do primeiro dado (1-6):", 
+                                       "Dado 1", JOptionPane.QUESTION_MESSAGE);
+                String valorDado2Str = JOptionPane.showInputDialog(BancoImobiliarioGUI.this, 
+                                       "Informe o valor do segundo dado (1-6):", 
+                                       "Dado 2", JOptionPane.QUESTION_MESSAGE);
+                
+                try {
+                    int valorDado1 = Integer.parseInt(valorDado1Str);
+                    int valorDado2 = Integer.parseInt(valorDado2Str);
+                    
+                    int[] dados = controller.valoresDados(valorDado1, valorDado2);
+                    logJogo.append(controller.getJogadorAtual().getNome() + " informou os dados: " + 
+                                  dados[0] + " e " + dados[1] + "\n");
+                    controller.realizarJogada(valorDado1, valorDado2);
+                    atualizarEstadoJogo();
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(BancoImobiliarioGUI.this, 
+                                                 "Por favor, informe valores numéricos válidos!", 
+                                                 "Erro", JOptionPane.ERROR_MESSAGE);
+                } catch (IllegalArgumentException ex) {
+                    JOptionPane.showMessageDialog(BancoImobiliarioGUI.this, 
+                                                 ex.getMessage(), 
+                                                 "Erro", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
         
@@ -144,7 +165,7 @@ public class BancoImobiliarioGUI extends JFrame {
         // Atualizar controles baseados no estado do jogo
         Jogador jogadorAtual = controller.getJogadorAtual();
         
-        botaoRolarDados.setEnabled(!controller.isJogoFinalizado());
+        botaoValoresDados.setEnabled(!controller.isJogoFinalizado());
         botaoComprar.setEnabled(!controller.isJogoFinalizado() && controller.podeComprarPropriedadeAtual());
         botaoPassarVez.setEnabled(!controller.isJogoFinalizado());
         

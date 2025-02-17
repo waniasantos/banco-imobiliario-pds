@@ -6,7 +6,6 @@ import com.bancoimobiliario.models.Tabuleiro;
 import com.bancoimobiliario.models.LugarEspecial;
 import com.bancoimobiliario.models.Adquirivel;
 
-import java.util.Random;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -14,14 +13,12 @@ public class JogoController {
     private List<Jogador> jogadores;
     private int jogadorAtual;
     private Tabuleiro tabuleiro;
-    private Random random;
     private boolean jogoFinalizado;
     
     public JogoController(Tabuleiro tabuleiro) {
         this.tabuleiro = tabuleiro;
         this.jogadores = new ArrayList<>();
         this.jogadorAtual = 0;
-        this.random = new Random();
         this.jogoFinalizado = false;
     }
     
@@ -33,9 +30,12 @@ public class JogoController {
     
     public boolean isJogoFinalizado() { return jogoFinalizado; }
     
-    public int[] rolarDados() {
-        int dado1 = random.nextInt(6) + 1;
-        int dado2 = random.nextInt(6) + 1;
+    public int[] valoresDados(int dado1, int dado2) {
+
+        // Validar os valores dos dados (devem estar entre 1 e 6)
+        if (dado1 < 1 || dado1 > 6 || dado2 < 1 || dado2 > 6) {
+            throw new IllegalArgumentException("Os valores dos dados devem estar entre 1 e 6");
+        }
         return new int[]{dado1, dado2};
     }
     
@@ -45,11 +45,11 @@ public class JogoController {
         } while (jogadores.get(jogadorAtual).isEliminado() && !verificarFimDeJogo());
     }
     
-    public void realizarJogada() {
+    public void realizarJogada(int dado1, int dado2) {
         Jogador jogadorAtual = getJogadorAtual();
         if (jogadorAtual.isEliminado()) return;
         
-        int[] dados = rolarDados();
+        int[] dados = valoresDados(dado1, dado2);
         int totalDados = dados[0] + dados[1];
         
         int posicaoAnterior = jogadorAtual.getPosicao();
