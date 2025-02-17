@@ -40,8 +40,6 @@ public class Empresa extends Adquirivel {
             System.out.println("Cobrado taxa de uso de " + taxa + " de " + visitante.getNome());
         } else {
             System.out.println(visitante.getNome() + " não possui saldo suficiente para pagar a taxa de uso.");
-            // eliminação -> controlador
-            visitante.eliminar();
         }
     }
     
