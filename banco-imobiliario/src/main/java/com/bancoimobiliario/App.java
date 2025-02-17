@@ -1,13 +1,10 @@
 package com.bancoimobiliario;
+import com.bancoimobiliario.factories.TabuleiroFactory;
+import com.bancoimobiliario.models.Tabuleiro;
 
-/**
- * Hello world!
- *
- */
-public class App 
-{
-    public static void main( String[] args )
-    {
-        System.out.println( "Hello World!" );
+public class App {
+    public static void main(String[] args) {
+        Tabuleiro tabuleiro = TabuleiroFactory.criarTabuleiroDefault();
+        System.out.println("Tabuleiro inicializado com " + tabuleiro.getTamanho() + " casas.");
     }
 }
